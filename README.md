@@ -2,6 +2,8 @@
 
 This project is to automate the case review on legal case documents and find the most critical cases using network analysis. 
 
+[Short write-up](https://yidatadive.com/patent-law.html)
+
 **Affiliation**: [Institute for Social and Economic Research and Policy](http://iserp.columbia.edu/), Columbia University
 
 ## Project Information:
