@@ -59,9 +59,9 @@ This project is to automate the case review on legal case documents and find the
 
 ### 4. Visulization Chart Sample
 
-#### Citation Frequency![case_freq](/Users/yiyin/Now/auto-law-review/pilot_159/figures/case_freq.png)
+#### Citation Frequency![case_freq](pilot_159/figures/case_freq.png)
 
-#### Citation Network![citation_net](/Users/yiyin/Now/auto-law-review/pilot_159/figures/citation_net.jpg)
+#### Citation Network![citation_net](pilot_159/figures/citation_net.jpg)
 
 ## Network Visulization and Predictive Modeling on 854 Legal Court Cases (in `Extraction_Modelling` folder)
 
@@ -99,13 +99,13 @@ This project is to automate the case review on legal case documents and find the
 
 #### Full Citation Network (all cases and cited cases)
 
-<img src="/Users/yiyin/Now/auto-law-review/Extraction_Modelling/figures/Full_Network.jpg" style="zoom:40%" />
+<img src="Extraction_Modelling/figures/Full_Network.jpg" style="zoom:40%" />
 
 
 
 #### Citation Between Available Cases
 
-<img src="/Users/yiyin/Now/auto-law-review/Extraction_Modelling/figures/Between_Node.jpg" style="zoom:10%"/>
+<img src="Extraction_Modelling/figures/Between_Node.jpg" style="zoom:10%"/>
 
 
 
@@ -117,4 +117,4 @@ This project is to automate the case review on legal case documents and find the
 
 #### Visulization of the Bi-gram (words) with the strongest coefficient
 
-![Bigram](/Users/yiyin/Now/auto-law-review/Extraction_Modelling/figures/Bigram_coef.jpg)
+![Bigram](Extraction_Modelling/figures/Bigram_coef.jpg)
