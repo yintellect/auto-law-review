@@ -1,0 +1,148 @@
+---
+title: "Clean Court Dataset"
+author: "Yi Yin"
+date: "4/28/2019"
+output:
+  pdf_document: default
+  html_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+```{r Setup, include=FALSE, results='hide', warning=FALSE}
+library(knitr)
+opts_chunk$set(fig.path="figures/clean_text_text/",
+               cache.path="cache/clean_text_text/",
+               cache=TRUE,
+               echo=TRUE,
+               message=FALSE,
+               warning=FALSE)  
+```  
+
+
+```{r preamble, message=FALSE, warning=FALSE, include=FALSE}
+rm(list = ls())
+library(tidyverse)
+```
+
+```{r load data, message=FALSE, include=FALSE}
+
+op_text<-read.csv("./cleaned_text.csv", sep = "\t", 
+                stringsAsFactors=F,row.names = 1)
+
+meta <-read.csv("./meta854.csv", sep = "\t", 
+                stringsAsFactors=F)%>%
+        mutate(text = op_text$cleaned_text)
+
+```
+
+```{r filter na, message=FALSE, warning=FALSE}
+no_na <- meta%>%filter(court_from!="",
+                       result!="",
+                       author!="",
+                       text!="",
+                       judge_panel!="")%>%
+        mutate(author = str_to_lower(author))
+```
+
+
+```{r clean author, message=FALSE, warning=FALSE}
+
+author_list <-no_na%>%select(author)%>%
+        group_by(author)%>%
+        summarise(n=n())%>%
+        filter(n>1)%>%
+        select(author)%>%unlist(use.names = F)
+
+no_na <-no_na%>%
+        filter(author%in%author_list)%>%
+        mutate(id = row_number())
+```
+
+```{r clean panel, message=FALSE, warning=FALSE}
+
+judge_panel <-no_na%>%
+        select(judge_panel, id)%>%
+        mutate(panel = judge_panel%>%
+        str_replace_all('Before ','')%>%
+        str_replace_all('(Circuit|Chief|District)\\s(Judge|Judges)(\\.|,)', '')%>%str_replace_all('\\sand', ',')%>%
+        str_replace_all('\\s\\s', ' ')%>%
+        str_split(","))%>%
+        select(-judge_panel)%>%
+        unnest()%>%
+        filter(!panel%in%c(""," ","  ","*","**","* ",
+                            "Circuit Judge", "District Judge.",
+                            "District Judge. *"))
+
+judge_panel<-judge_panel%>%
+        mutate(judge = panel%>%
+                       str_replace_all('\\*','')%>%
+                       str_replace_all('\\s','')%>%
+                       str_replace_all('’','\'')%>%
+                       str_to_lower())
+
+panel_list<-judge_panel%>%
+        select(judge)%>%
+        filter(judge !="")%>%
+        group_by(judge)%>%
+        summarise(n=n())%>%
+        filter(n>10)%>%
+        select(judge)%>%unlist(use.names = F)
+
+
+judge_panel<-judge_panel%>%
+        select(id, judge)%>%
+        filter(judge %in% panel_list)
+
+judge_panel<-judge_panel%>%
+        group_by(id)%>%
+        arrange(id,judge)%>%
+        mutate(panel= row_number())
+
+reshape_panel<-spread(judge_panel, 
+                      key = panel, 
+                      value = judge,
+                      sep='_')
+
+```
+
+
+```{r clean panel}
+no_na<-no_na%>%
+        mutate(decision = str_to_lower(result)%>%
+                       str_replace_all('-',' ')%>%
+                       str_replace_all('–',' ')%>%
+                       str_replace_all('\\.','')%>%
+                       str_replace_all(' and',',')%>%
+                       str_replace_all(',,',','))
+
+```
+
+```{r save data, eval=FALSE, include=FALSE, echo=FALSE}
+case_data<-no_na%>%select(id, 
+                       text, 
+                       author, 
+                       decision, 
+                       case_name,
+                       case_code,
+                       court_from,
+                       court_type)
+
+case_data<-case_data%>%left_join(reshape_panel)
+
+save(case_data, file = "cases.Rdata")
+
+```
+
+```{r}
+case_predict <- case_data%>%select(text, 
+                                   author,
+                                   decision)%>%
+        mutate(affirm = ifelse(decision=='affirmed',1,0))
+
+write.csv(case_predict, 
+          file = 'NLP_data.csv',
+          row.names = FALSE)
+
+```
+

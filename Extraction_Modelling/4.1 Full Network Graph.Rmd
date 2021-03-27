@@ -1,0 +1,82 @@
+---
+title: "Law Citation Full Network"
+author: "Yi Yin"
+date: "4/27/2019"
+output:
+  pdf_document: default
+  html_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+```{r Setup, include=FALSE, results='hide', warning=FALSE}
+library(knitr)
+opts_chunk$set(fig.path="figures/full_network/",
+               cache.path="cache/full_network/",
+               cache=TRUE,
+               echo=TRUE,
+               message=FALSE,
+               warning=FALSE)  
+```  
+
+
+```{r preamble, message=FALSE, warning=FALSE, include=FALSE}
+rm(list = ls())
+library(tidyverse)
+```
+
+
+```{r edge list, message=FALSE}
+links <-read.csv("./cite_egde.csv", sep = ",", 
+                 colClasses = 'character')
+
+# Trim the Network based on citation frequency
+edges<-links%>%group_by(to)%>%summarise(freq=n())%>%
+        arrange(desc(freq))%>%filter(freq>20)
+
+links<- links%>%filter(to %in% edges$to)
+rm(edges)
+```
+
+
+```{r network graph, fig.align='center', fig.width=12, fig.height=12}
+library("igraph")
+net <- graph_from_data_frame(d=links, directed=T)
+
+
+vex <-tibble(node = rep(NA, length(V(net)$name)))%>%
+        mutate(node = V(net)$name)
+vex$indegree <- degree(net, mode = "in",normalized = T)
+
+bar<-vex%>%arrange(desc(indegree))%>%
+        .[25,'indegree']%>%
+        unlist(use.names = FALSE)
+
+
+# vex <-vex%>%mutate(label = ifelse(indegree >=0.11, node, NA))
+vex <-vex%>%mutate(ncolor = ifelse(indegree >=bar, 
+                                   "#923740", '#6ABCC3'))
+
+V(net)$color <-vex$ncolor
+V(net)$label <-NA
+V(net)$label.family <-"Palatino"
+V(net)$label.color <-"#923740"
+V(net)$label.cex <- 0.5
+V(net)$label.degree<- pi/3
+V(net)$label.dist <-0.5
+V(net)$size <- vex$indegree*30
+
+V(net)$frame.color<-"#2C2D25"
+V(net)$frame.width<-0.0001
+
+E(net)$width <- 0.6
+E(net)$edge.color <- "#2C2D25"
+E(net)$arrow.size <- 0.04
+
+
+plot(net, layout=layout_with_kk(net))
+
+```
+
+
+

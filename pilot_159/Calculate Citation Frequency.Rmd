@@ -1,0 +1,89 @@
+---
+title: "Calculate Frequency of Citations in R"
+author: "YIN YI"
+date: "4/14/2019"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+rm(list = ls())
+```
+
+
+```{r preamble, message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+
+```{r load data, message=FALSE, warning=FALSE, echo=FALSE, eval=FALSE}
+ref_test <-read.csv("reference_extract.csv",sep = "\t",
+                    row.names=1,colClasses="character")
+```
+
+```{r, include=FALSE, echo=FALSE, eval=FALSE}
+
+# ref<-ref_test%>%mutate(citations = gsub("\\[|\\]", "", citations),
+#                 regulations = gsub("\\[|\\]", "", regulations),
+#                 patents = gsub("\\[|\\]", "", patents))
+```
+
+
+
+```{r, message=FALSE, warning=FALSE,echo=FALSE, eval=FALSE}
+## Calculate the most frequency of cited citation
+cites<-ref_test%>%select(file_name, citations)%>%
+        mutate(citations = gsub("\\[|\\]", "", citations))%>%
+        splitstackshape::cSplit("citations", ",")%>%
+        reshape2::melt(id.vars = "file_name")%>%
+        select(-variable)%>%rename(cite=value)%>%
+        filter(is.na(cite)==F)
+
+cites%>%group_by(cite)%>%
+        summarise(freq = n())%>%
+        arrange(desc(freq))%>%
+        top_n(n=5, wt =freq)
+```
+
+
+
+```{r, message=FALSE, warning=FALSE,echo=FALSE, eval=FALSE}
+## Calculate the most frequency of cited regulations
+regs<-ref_test%>%select(file_name, regulations)%>%
+        mutate(regulations = gsub("\\[|\\]", "", regulations))%>%
+        splitstackshape::cSplit("regulations", ",")%>%
+        reshape2::melt(id.vars = "file_name")%>%
+        select(-variable)%>%rename(reg=value)%>%
+        filter(is.na(reg)==F)
+
+regs%>%group_by(reg)%>%
+        summarise(freq = n())%>%
+        arrange(desc(freq))%>%
+        top_n(n=5, wt =freq)
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+citations<-read.csv("citation159.csv",sep = "\t",
+                    row.names=1,colClasses="character")
+
+citations%>%group_by(citaion)%>%
+        summarise(freq = n())%>%
+        arrange(desc(freq))%>%
+        top_n(n=5, wt =freq)
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+regulations<-read.csv("regulation159.csv",sep = "\t",
+                    row.names=1,colClasses="character")
+
+regulations%>%group_by(regulation)%>%
+        summarise(freq = n())%>%
+        arrange(desc(freq))%>%
+        top_n(n=5, wt =freq)
+```
+
+```
