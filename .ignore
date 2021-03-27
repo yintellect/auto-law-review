@@ -1,3 +1,5 @@
-*.csv
-*.json
+pilot_159/*.csv
+pilot_159/*.json
+Extraction_Modelling/*.csv
+Extraction_Modelling/*.json
 .DS_Store
