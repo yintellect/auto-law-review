@@ -24,7 +24,7 @@ This project is to automate the case review on legal case documents and find the
 
 <figure>
 <iframe   src="https://yialpha.github.io/auto-law-review/Extraction_Modelling/between_net_20.html"  frameBorder="0" style="width:100%; height:500px;" ></iframe>
-<figure>
+</figure>
 
 ## Polit Study on 159 Legal Court Documents (in `pilot_159` folder)
 
