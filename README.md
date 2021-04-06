@@ -22,9 +22,7 @@ This project is to automate the case review on legal case documents and find the
 3. Extract judge's opinion text and meta information including opinion author, court, decision.
 4. Model training to predict court decision based on opinion text.
 
-<figure>
-<iframe   src="https://yialpha.github.io/auto-law-review/Extraction_Modelling/between_net_20.html"  frameBorder="0" style="width:100%; height:500px;" ></iframe>
-</figure>
+
 
 ## Polit Study on 159 Legal Court Documents (in `pilot_159` folder)
 
@@ -103,15 +101,19 @@ This project is to automate the case review on legal case documents and find the
 | `Citation Betwwen Nodes.Rmd`              | draw citation between all the available cases |
 | `Clean Data For Predictive Modelling.rmd` | clean text data for predictive modeling       |
 
+#### Interactive Graph
+[Play with Interactive Graph](https://yialpha.github.io/auto-law-review/Extraction_Modelling/between_net_20.html)
+<img src="Extraction_Modelling/figures/inter.png" zoom="40%" />
+
 #### Full Citation Network (all cases and cited cases)
 
-<img src="Extraction_Modelling/figures/Full_Network.jpg" style="zoom:40%" />
+<img src="Extraction_Modelling/figures/Full_Network.png" />
 
 
 
 #### Citation Between Available Cases
 
-<img src="Extraction_Modelling/figures/Between_Node.jpg" style="zoom:10%"/>
+<img src="Extraction_Modelling/figures/Between_Node.png"/>
 
 
 
@@ -123,4 +125,4 @@ This project is to automate the case review on legal case documents and find the
 
 #### Visulization of the Bi-gram (words) with the strongest coefficient
 
-![Bigram](Extraction_Modelling/figures/Bigram_coef.jpg)
+![Bigram](Extraction_Modelling/figures/Bigram_coef.png)
