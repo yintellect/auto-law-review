@@ -22,6 +22,8 @@ This project is to automate the case review on legal case documents and find the
 3. Extract judge's opinion text and meta information including opinion author, court, decision.
 4. Model training to predict court decision based on opinion text.
 
+<iframe   src="https://yialpha.github.io/auto-law-review/Extraction_Modelling/between_net_20"   style="width:100%; height:400px;" ></iframe>
+
 ## Polit Study on 159 Legal Court Documents (in `pilot_159` folder)
 
 ### 1. Process PDF documents using `Python` 
